@@ -20,7 +20,10 @@ import java.util.HashMap;
 import java.util.List;
 
 // import from other folders
-import helper_functions.Validate_User;
+import java.SpringBoot.ToDoozyBackEnd.helper_functions.Validate_User;
+import java.SpringBoot.ToDoozyBackEnd.RuntimeException.Conflict.UserConflictException;
+import java.SpringBoot.ToDoozyBackEnd.RuntimeException.BadRequest.RegistrationFormException;
+import java.SpringBoot.ToDoozyBackEnd.RuntimeException.InternalServerError.GlobalExceptionHandler;
 
 @RestController
 public class UserController {
@@ -63,7 +66,7 @@ public class UserController {
             for(User user : repository.findByUsername(new_username)) {
                 if(user.getUsername().length() > 0) {
                     errors_map.put("username", "This username already exists");
-                    throw UsernameExistException(new_username);
+                    throw new UserConflictException(errors_map);
                 }
             }
 
@@ -72,14 +75,14 @@ public class UserController {
                 boolean passwordMatch = password_encoder.matches(new_password, user.getPassword());
                 if(passwordMatch) {
                     errors_map.put("password", "This password already exists");
-                    throw PasswordExistException(new_password);
+                    throw new UserConflictException(errors_map);
                 }
             }
 
             for(User user : repository.findByEmail(new_email)) {
                 if(user.getEmail().length() > 0) {
                     errors_map.put("email", "This email already exists");
-                    throw EmailExistException(new_email);
+                    throw new UserConflictException(errors_map);
                 }
             }
 
@@ -88,13 +91,13 @@ public class UserController {
         }
 
         // throw the errors in registration form exception if there is an error in the form data
-        throw RegistrationFormException(newUser);
+        throw new RegistrationFormException(errors_map);
     }
 
     // update an user using PATCH request
     @PatchMapping("/users/")
     User updateUser(@RequestBody String username, String password, String password_confirmation) {
-
+        
     }
 
     // Single user control

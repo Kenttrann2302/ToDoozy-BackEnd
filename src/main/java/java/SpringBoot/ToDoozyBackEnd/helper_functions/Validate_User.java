@@ -1,5 +1,5 @@
 // this is a helper function that using regular expressions to check for the validation in the registration form
-package helper_functions;
+package java.SpringBoot.ToDoozyBackEnd.helper_functions;
 
 import org.springframework.security.core.parameters.P;
 
