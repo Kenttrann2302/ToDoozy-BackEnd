@@ -1,4 +1,4 @@
-package java.SpringBoot.ToDoozyBackEnd;
+package com.example.todoozy.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

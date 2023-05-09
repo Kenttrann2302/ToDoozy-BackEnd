@@ -1,5 +1,5 @@
 // this is a user class
-package java.SpringBoot.ToDoozyBackEnd;
+package com.example.todoozy.backend;
 
 // import libraries
 import java.util.Objects;

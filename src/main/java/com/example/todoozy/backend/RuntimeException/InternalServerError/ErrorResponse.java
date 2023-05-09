@@ -1,4 +1,4 @@
-package java.SpringBoot.ToDoozyBackEnd.RuntimeException.InternalServerError;
+package com.example.todoozy.backend.RuntimeException.InternalServerError;
 
 // this is a class for the response to an internal server error
 public class ErrorResponse {

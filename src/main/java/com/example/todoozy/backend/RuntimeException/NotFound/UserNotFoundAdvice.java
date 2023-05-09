@@ -1,4 +1,4 @@
-package java.SpringBoot.ToDoozyBackEnd.RuntimeException.NotFound;
+package com.example.todoozy.backend.RuntimeException.NotFound;
 
 
 // import libraries

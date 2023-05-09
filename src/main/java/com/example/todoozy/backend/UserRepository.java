@@ -7,7 +7,7 @@
  + Delete an existing user
 */
 
-package java.SpringBoot.ToDoozyBackEnd;
+package com.example.todoozy.backend;
 
 // import libraries
 import java.util.List;

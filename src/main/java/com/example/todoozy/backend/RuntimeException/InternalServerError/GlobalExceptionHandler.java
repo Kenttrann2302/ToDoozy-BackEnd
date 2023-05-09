@@ -1,4 +1,4 @@
-package java.SpringBoot.ToDoozyBackEnd.RuntimeException.InternalServerError;
+package com.example.todoozy.backend.RuntimeException.InternalServerError;
 
 // import libraries
 import org.springframework.http.HttpStatus;

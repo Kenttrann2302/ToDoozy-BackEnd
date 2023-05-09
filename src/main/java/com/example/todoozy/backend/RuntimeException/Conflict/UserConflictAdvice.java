@@ -1,4 +1,4 @@
-package java.SpringBoot.ToDoozyBackEnd.RuntimeException.Conflict;
+package com.example.todoozy.backend.RuntimeException.Conflict;
 
 
 

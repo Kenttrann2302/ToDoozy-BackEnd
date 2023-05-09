@@ -1,4 +1,4 @@
-package java.SpringBoot.ToDoozyBackEnd;
+package com.example.todoozy.backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -2,12 +2,13 @@
   Wrap the whole user repository with a web layer using a controller layer (HTTP is the Platform)
 */
 
-package java.SpringBoot.ToDoozyBackEnd;
+package com.example.todoozy.backend;
 
 // import libraries
 // annotations
-import com.fasterxml.jackson.databind.JsonSerializer;
-import org.springframework.security.core.parameters.P;
+import com.example.todoozy.backend.RuntimeException.BadRequest.RegistrationFormException;
+import com.example.todoozy.backend.RuntimeException.Conflict.UserConflictException;
+import com.example.todoozy.backend.helper_functions.Validate_User;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -22,12 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 
 // import from other folders
-import java.SpringBoot.ToDoozyBackEnd.helper_functions.Validate_User;
-import java.SpringBoot.ToDoozyBackEnd.RuntimeException.Conflict.UserConflictException;
-import java.SpringBoot.ToDoozyBackEnd.RuntimeException.BadRequest.RegistrationFormException;
-import java.SpringBoot.ToDoozyBackEnd.RuntimeException.NotFound.UserNotFoundException;
-import java.SpringBoot.ToDoozyBackEnd.RuntimeException.NotFound.UserIDNotFoundException;
-import java.SpringBoot.ToDoozyBackEnd.RuntimeException.InternalServerError.GlobalExceptionHandler;
+import com.example.todoozy.backend.RuntimeException.NotFound.UserNotFoundException;
+import com.example.todoozy.backend.RuntimeException.NotFound.UserIDNotFoundException;
 
 @RestController
 public class UserController {

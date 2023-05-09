@@ -1,4 +1,4 @@
-package java.SpringBoot.ToDoozyBackEnd.RuntimeException.BadRequest;
+package com.example.todoozy.backend.RuntimeException.BadRequest;
 
 // import libraries
 import java.util.HashMap;

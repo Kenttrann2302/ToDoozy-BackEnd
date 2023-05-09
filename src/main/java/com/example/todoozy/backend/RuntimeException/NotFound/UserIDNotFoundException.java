@@ -1,4 +1,4 @@
-package java.SpringBoot.ToDoozyBackEnd.RuntimeException.NotFound;
+package com.example.todoozy.backend.RuntimeException.NotFound;
 
 // this is a file for handling the 404 not found with the given user id
 public class UserIDNotFoundException extends RuntimeException {
