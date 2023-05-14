@@ -1,4 +1,5 @@
 // this is a user class
+// we are using H2 database and access it through JPA
 package com.user.todoozy.backend.model;
 
 // import libraries
@@ -6,38 +7,43 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-@Document(collection = "users")
+@Entity(name = "users")
 public class User {
     private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(); // to encode the password
 
-    @Id
-    private String id;
+    private @Id @GeneratedValue (generator = "uuid2") @GenericGenerator(name="uuid2", strategy = "org.hibernate.id.UUIDGenerator") UUID id;
     private String username; // user's name
     private String password; // user's password
     private String password_confirmation; // user's password confirmation
     private String email; // user's email address
     private LocalDateTime time_created; // user's time created
 
-    public User() {
-        this.id = UUID.randomUUID().toString(); // generate a new UUID
-    } // default constructor
+    // function set default value of time_created to current date and time
+    @PrePersist
+    public void prePersist() {
+        time_created = LocalDateTime.now();
+    }
+
+    public User() {} // default constructor
 
     // data constructor
-    public User(String username, String password, String password_confirmation, String email, LocalDateTime time_created) {
-        this.id = UUID.randomUUID().toString(); // generate a new UUID
+    public User(String username, String password, String password_confirmation, String email) {
         this.username = username;
         this.password = encoder.encode(password);
         this.password_confirmation = encoder.encode(password_confirmation);
         this.email = email;
-        this.time_created = time_created;
     }
 
     // getter methods
-    public String getId() {
+    public UUID getId() {
         return this.id;
     }
 
@@ -56,7 +62,7 @@ public class User {
     public LocalDateTime getTime_created() { return this.time_created; }
 
     // setter methods
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     } // not necessary
 

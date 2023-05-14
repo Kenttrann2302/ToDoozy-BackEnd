@@ -10,25 +10,26 @@
 package com.user.todoozy.backend.repository;
 
 // import libraries
-import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import com.user.todoozy.backend.model.User;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends MongoRepository<User, String> {
 
-    public Optional<User> findById(String id);
+public interface UserRepository extends JpaRepository<User, String> {
+
+    public Optional<User> findById(UUID id);
 
     public Optional<User> findByUsername(String username); // get request
 
-    public User postfindByUsername(String username); // post request
+    public User findUserByUsername(String username); // post request
 
     public Boolean findByPassword(String password);
 
     public Optional<User> findByEmail(String email); // get request
 
-    public User postfindByEmail(String email); // post request
+    public User findUserByEmail(String email); // post request
 
     // deletion
     public void deleteUserByUsername(String username);

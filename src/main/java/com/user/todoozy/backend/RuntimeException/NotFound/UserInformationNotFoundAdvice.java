@@ -14,7 +14,7 @@ public class UserInformationNotFoundAdvice {
     @ResponseBody
     @ExceptionHandler(UserInformationNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String userIDNotFoundHandler(UserInformationNotFoundException ex) {
+    String userNotFoundHandler(UserInformationNotFoundException ex) {
         return ex.getMessage();
     }
 }

@@ -6,7 +6,6 @@ package com.user.todoozy.backend;
 
 // import libraries
 // annotations
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,9 +15,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 // import from other folders
 import com.user.todoozy.backend.RuntimeException.NotFound.UserNotFoundException;
+import com.user.todoozy.backend.RuntimeException.NotFound.UserIDNotFoundException;
 import com.user.todoozy.backend.RuntimeException.NotFound.UserInformationNotFoundException;
 import com.user.todoozy.backend.RuntimeException.BadRequest.RegistrationFormException;
 import com.user.todoozy.backend.RuntimeException.Conflict.UserConflictException;
@@ -38,15 +39,15 @@ public class UserController {
     // Aggregate root
     // tag::get-aggregate-root[]
     // GET request
-    @GetMapping("/user-account/")
+    @GetMapping("/user-account/get-all-users/")
     public List<User> getAllUsers() {
         return userService.findAll();
     }
     // end::get-aggregate-root[]
 
     // POST request
-    @PostMapping("/user-account/")
-    public ResponseEntity<?>  saveUser(@RequestBody User new_user) {
+    @PostMapping("/user-account/create-account/")
+    public ResponseEntity<?> saveUser(@RequestBody User new_user) {
         // helper function to validate the user input before inserting new user into the database
         String new_username = new_user.getUsername();
         String new_password = new_user.getPassword();
@@ -63,7 +64,7 @@ public class UserController {
         if(errors_map.isEmpty()) {
 
             // query the database to see if the username, password, email already been used
-            User findUsername = userService.postfindByUsername(new_username);
+            User findUsername = userService.findUserByUsername(new_username);
             if(findUsername != null) {
                 errors_map.put("username", "This username already exists");
                 throw new UserConflictException(errors_map);
@@ -75,7 +76,7 @@ public class UserController {
                 throw new UserConflictException(errors_map);
             }
 
-            User findEmail = userService.postfindByEmail(new_email);
+            User findEmail = userService.findUserByEmail(new_email);
             if(findEmail != null) {
                 errors_map.put("email", "This email already exists");
                 throw new UserConflictException(errors_map);
@@ -94,7 +95,7 @@ public class UserController {
     }
 
     // PATCH request
-    @PatchMapping("/user-account/")
+    @PatchMapping("/user-account/update-password/")
     public ResponseEntity<?> updateUser(@RequestBody String username, String password, String password_confirmation) {
         // validate the form data that the client sends
         // initiate a hash map to store the errors after validating the user's registration form
@@ -118,7 +119,7 @@ public class UserController {
                 throw new UserConflictException(errors_HashMap);
             }
 
-            User findUsername = userService.postfindByUsername(update_username);
+            User findUsername = userService.findUserByUsername(update_username);
             if(findUsername == null) {
                 findUsername.setPassword(password_encoder.encode(update_password));
                 findUsername.setPassword_confirmation(password_encoder.encode(update_password_confirmation));
@@ -136,7 +137,7 @@ public class UserController {
     }
 
     // DELETE request
-    @DeleteMapping("/user-account/")
+    @DeleteMapping("/user-account/delete-username/")
     public ResponseEntity<?> deleteUserByUsername(@RequestBody String username) {
         HashMap<String, String> errors_map = new HashMap<>();
 
@@ -154,16 +155,16 @@ public class UserController {
         throw new UserNotFoundException(errors_map);
     }
 
-    @DeleteMapping("/user-account/")
+    @DeleteMapping("/user-account/delete-email/")
     public ResponseEntity<?> deleteUserByEmail(@RequestBody String email) {
         HashMap<String, String> errors_map = new HashMap<>();
 
         String delete_email = email;
 
-        // query the database to see if the user account exists
-        Optional<User> findEmail = userService.findByUsername(delete_email);
+        // query the database to get the user account with the email
+        Optional<User> findEmail = userService.findByEmail(delete_email);
         if(findEmail != null) {
-            userService.deleteUserByUsername(delete_email);
+            userService.deleteUserByEmail(delete_email);
             return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
         }
 
@@ -174,19 +175,21 @@ public class UserController {
 
     // Single user control
     // get one user
-    @GetMapping("/users/{id}/")
+    @GetMapping("/user-account/get-id/{id}/")
     public User getUserById(@PathVariable String id) {
-        return userService.findById(id)
-                .orElseThrow(() -> new UserInformationNotFoundException("user id", id));
+        // convert the id from string to UUID
+        UUID string_to_uuid = UUID.fromString(id);
+        return userService.findById(string_to_uuid)
+                .orElseThrow(() -> new UserIDNotFoundException(string_to_uuid)); // this is for UUID only
     }
 
-    @GetMapping("/users/{username}/")
+    @GetMapping("/user-account/get-username/{username}/")
     public User getUserByUsername(@PathVariable String username) {
         return userService.findByUsername(username)
                 .orElseThrow(() -> new UserInformationNotFoundException("username", username));
     }
 
-    @GetMapping("/users/{email}/")
+    @GetMapping("/user-account/get-email/{email}/")
     public User getUserByEmail(@PathVariable String email) {
         return userService.findByEmail(email)
                 .orElseThrow(() -> new UserInformationNotFoundException("email", email));
@@ -194,9 +197,11 @@ public class UserController {
 
 
     // put one user
-    @PutMapping("/users/{id}/")
+    @PutMapping("/user-account/change-one-user/{id}/")
     User replaceUser(@RequestBody User newUser, @PathVariable String id) {
-        return userService.findById(id)
+        // convert string to uuid
+        UUID uuid_from_string = UUID.fromString(id);
+        return userService.findById(uuid_from_string)
                 .map(user -> {
                     user.setUsername(newUser.getUsername());
                     user.setPassword(newUser.getPassword());
@@ -204,8 +209,8 @@ public class UserController {
                     user.setEmail(newUser.getEmail());
                     return userService.saveUser(user);
                 })
-                .orElseGet(() -> {
-                    newUser.setId(id);
+                .orElseGet(() -> {  
+                    newUser.setId(uuid_from_string);
                     return userService.saveUser(newUser);
                 });
     }

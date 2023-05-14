@@ -1,7 +1,6 @@
 package com.user.todoozy.backend.service.impl;
 
 // import other files
-import com.user.todoozy.backend.RuntimeException.Conflict.UserConflictException;
 import com.user.todoozy.backend.model.User;
 import com.user.todoozy.backend.repository.UserRepository;
 import com.user.todoozy.backend.service.UserService;
@@ -11,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 // implement the student services class
@@ -18,14 +18,17 @@ public class UserServiceImpl implements UserService {
 
     private static final BCryptPasswordEncoder password_encoder = new BCryptPasswordEncoder();
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public List<User> findAll() { return userRepository.findAll(); }
 
     @Override
-    public Optional<User> findById(String id) {
+    public Optional<User> findById(UUID id) {
         return userRepository.findById(id);
     }
 
@@ -35,8 +38,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User postfindByUsername(String username) { // post request
-        return userRepository.postfindByUsername(username);
+    public User findUserByUsername(String username) { // post request
+        return userRepository.findUserByUsername(username);
     }
 
     @Override
@@ -60,8 +63,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User postfindByEmail(String email) {
-        return userRepository.postfindByEmail(email);
+    public User findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email);
     }
 
     @Override
