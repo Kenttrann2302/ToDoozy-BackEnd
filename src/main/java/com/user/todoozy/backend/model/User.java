@@ -8,13 +8,11 @@ import java.util.Objects;
 import java.util.UUID;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
+import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+// this is the users entity in the database
 @Entity(name = "users")
 public class User {
     private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(); // to encode the password
@@ -25,6 +23,7 @@ public class User {
     private String password_confirmation; // user's password confirmation
     private String email; // user's email address
     private LocalDateTime time_created; // user's time created
+
 
     // function set default value of time_created to current date and time
     @PrePersist
