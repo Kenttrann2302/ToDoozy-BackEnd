@@ -19,7 +19,6 @@ public class UserSchedule {
     private String description; // a brief description of the activity
     private LocalDateTime startTime; // the start time of the activity
     private LocalDateTime endTime; // the end time of the activity
-    private Location location; // the location of the event or activity
     private Boolean reminder; // whether the user choose to be reminded for this activity
     @ElementCollection
     private List<String> recurrence; // the list of the repetition that user want to set for this activity
@@ -34,6 +33,10 @@ public class UserSchedule {
     @ManyToOne
     @JoinColumn(name="id")
     private User user;
+
+    @OneToOne
+    @JoinColumn(name="id")
+    private Location location; // the location of the event or activity
 
     // data constructor
     public UserSchedule() {} // default constructor

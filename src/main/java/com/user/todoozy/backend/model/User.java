@@ -96,7 +96,7 @@ public class User {
     @Override
     public String toString() {
         return String.format(
-                "User[id='%s', username='%s', password='%s', password_confirmation='%s, email='%s', time_create='%s']", this.id, this.username, this.password, this.password_confirmation, this.email, this.time_created
+                "User[id='%s', username='%s', password='%s', password_confirmation='%s, email='%s', time_created='%s']", this.id, this.username, this.password, this.password_confirmation, this.email, this.time_created
         );
     }
 }
